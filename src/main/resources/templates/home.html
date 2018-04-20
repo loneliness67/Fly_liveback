@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="elementUI/index.css">
+    <script src="js/jquery-3.3.1.min.js"></script>
+</head>
+<style type="text/css">
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, SimSun, sans-serif;
+        font-size: 14px;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .header {
+        background-color: #20a0ff;
+    }
+
+    .logo {
+        color: white;
+        height: 60px;
+        font-size: 22px;
+        padding-left: 20px;
+        padding-right: 20px;
+        border-color: hsla(62, 77%, 76%, .3);
+        border-right-width: 1px;
+        border-right-style: solid;
+    }
+
+    .logo-width {
+        width: 230px;
+    }
+
+    .logo-text {
+        font-size: 29px;
+        text-align: center;
+        margin: 10px auto auto auto;
+
+
+    }
+
+    .menu-expanded {
+        flex: 0 0 230px;
+        width: 230px;
+    }
+
+    .nav-heide {
+        margin-bottom: -3000px;
+        padding-bottom: 3000px;
+        background-color: rgb(238, 241, 246);
+        float: left;
+    }
+    .userinfo {
+        text-align: right;
+        padding-right: 35px;
+        float: right;
+        cursor: pointer;
+    }
+    .userinfo-c{
+        text-align: center;
+        width: 40px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        line-height: 60px;
+    }
+    .userinfo-c img {
+        height: 40px;
+        float: right;
+        border-radius: 20px;
+        margin: 10px 0px 10px 10px;
+    }
+    iframe{
+        width: 100%;
+        border: 1px solid #eeeeee;
+    }
+    .el-main{
+        overflow: hidden;
+    }
+
+</style>
+<body>
+<div id="app">
+    <el-row>
+        <!--头部开始-->
+        <el-col :span="24" class="header">
+            <el-col :span="10" class="logo logo-width">
+                <p class="logo-text">BACKSTAGE</p>
+            </el-col>
+            <el-col :span="14" class="userinfo">
+                <!-- 登陆信息开始-->
+                <el-dropdown>
+                          <span class="el-dropdown-link userinfo-c" >
+                            ${session.currentuser.username}<img src="http://img.taopic.com/uploads/allimg/121014/234931-1210140JK414.jpg">
+                          </span>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item command="d" disabled>设置</el-dropdown-item>
+                        <el-dropdown-item command="e"><el-button type="text" style="color: #000000;" v-on:click="open2">退出登陆</el-button></el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <!--登陆信息结束-->
+            </el-col>
+        </el-col>
+        <!--头部结束-->
+        <el-col :span="24">
+            <!--导航条开始-->
+            <el-aside class="menu-expanded nav-heide" width="230px">
+                <el-menu default-active="2" class="el-menu-vertical-demo" background-color="#eef1f6">
+                    <el-submenu index="1">
+                        <template slot="title">
+                            <i class="el-icon-location"></i>
+                            <span>页面管理</span>
+                        </template>
+                        <el-menu-item-group>
+                            <el-menu-item index="1-1" @click="getNav11">首页</el-menu-item>
+                            <!--<el-menu-item index="1-2">选项2</el-menu-item>-->
+                        </el-menu-item-group>
+                    </el-submenu>
+
+                    <el-submenu index="2">
+                        <template slot="title">
+                            <i class="el-icon-mobile-phone"></i>
+                            <span>资料管理</span>
+                        </template>
+                        <el-menu-item-group>
+                            <el-menu-item index="2-1" @click="getNav21">用户管理</el-menu-item>
+                            <!--<el-menu-item index="1-2">选项2</el-menu-item>-->
+                        </el-menu-item-group>
+                    </el-submenu>
+                </el-menu>
+            </el-aside>
+
+            <el-main>
+                <!--跳转窗口-->
+                <iframe id="myiframe" :src="iframeSrc" ></iframe>
+                <!--结束-->
+            </el-main>
+
+        </el-col>
+    </el-row>
+</div>
+</body>
+<script src="elementUI/vue.js"></script>
+<!-- import Vue before Element -->
+<!--<script src="elementUI/vue.js"></script>-->
+<!-- import JavaScript -->
+<script src="elementUI/index.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data:  {
+            iframeSrc: '/welcome'
+
+
+        },
+        methods: {
+            open2() {
+                this.$confirm('确认是否退出登陆?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$message({
+                    type: 'success',
+                    message: '退出成功!',
+                });
+                this.$options.methods.logout();
+            }).catch(() => {
+                    this.$message({
+                    type: 'info',
+                    message: '取消退出'
+                });
+            });
+            },
+            getNav21: function() {
+                this.iframeSrc = '/nav2_1'
+            },
+            getNav11: function() {
+                this.iframeSrc = '/nav1_1'
+            },
+            logout: function () {
+                $.ajax({
+                    type : "GET",
+                    url : "/logout",
+                    success : function() {
+                    }
+                });
+                location.href="http://127.0.0.1:8080";
+            }
+
+
+
+
+        }
+
+
+    });
+</script>
+
+<script type="text/javascript">
+    var ifm= document.getElementById("myiframe");
+    ifm.height=document.documentElement.clientHeight-150;
+</script>
+</html>

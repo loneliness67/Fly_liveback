@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="elementUI/index.css">
+</head>
+<style type="text/css">
+    #app {
+        font-family: Helvetica, sans-serif;
+        text-align: center;
+    }
+
+    .login-center {
+        margin: 200px auto;
+        width: 400px;
+    }
+
+    .login-input {
+        margin-bottom: 20px;
+    }
+
+    .d30 {
+        height: 30px;
+    }
+
+    .login-main {
+        margin: auto auto;
+        width: 280px;
+    }
+</style>
+<body>
+<div id="app">
+    <div class="login-center">
+        <el-card shadow="always">
+            <div class="login-main">
+                <form action="/login" method="post" id="fform">
+                    <h2>后台登陆</h2>
+                    <el-input name="number" v-model="number" placeholder="请输入手机号" class="login-input"></el-input>
+                    <el-input name="password" type="password" v-model="password" placeholder="请输入密码" auto-complete="off"></el-input>
+                    <div class="d30"></div>
+                    <el-button type="primary" v-on:click="onSubmit" style="width: 100%">登陆</el-button>
+                </form>
+            </div>
+        </el-card>
+    </div>
+</div>
+</body>
+<!-- import Vue before Element -->
+<script src="elementUI/vue.js"></script>
+<!-- import JavaScript -->
+<script src="elementUI/index.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            number: '',
+            password: ""
+
+        },
+        methods: {
+            onSubmit: function() {
+                console.log("submit");
+                document.getElementById("fform").submit();
+            }
+
+        }
+    });
+</script>
+</html>

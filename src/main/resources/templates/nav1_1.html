@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- import CSS -->
+    <!--<link rel="stylesheet" href="elementUI/index.css">-->
+    <link rel="stylesheet" href="elementUI/index.css">
+    <script src="js/jquery-3.3.1.min.js"></script>
+</head>
+<style type="text/css">
+    body{overflow：hidden}
+    .main{
+        margin: 10px;
+    }
+    .div-seach{
+        background-color: #f2f2f2;
+        margin-top: 10px;
+        padding: 10px 15px;
+    }
+    .lialog-ccbh{
+        color: red;
+        font-weight: bold;
+
+    }
+    .content{
+        margin: 0px auto;
+    }
+
+
+</style>
+<body>
+<div id="app">
+    <el-row class="main">
+        <el-col :span="24"><strong style="font-size: 14px">首页橱窗修改</strong></el-col>
+        <el-col :span="24">
+            <div class="div-seach"><el-button size="mini" type="primary" v-on:click="geindex">
+                <strong style="font-size: 14px">浏览主页</strong>
+            </el-button>
+            </div></el-col>
+        <el-col :span="24">
+            <el-table
+                    v-on:cell-click="getCloumn"
+                    :data="tableData"
+                    style="width: 100%">
+
+                <el-table-column
+                        label="橱窗号"
+                        width="80">
+                    <template slot-scope="scope">
+                        <span style="margin-left: 10px">{{ scope.row.id }}</span>
+                    </template>
+                </el-table-column>
+
+                <el-table-column
+                        label=" 修改时间"
+                        width="100"
+                        center>
+                    <template slot-scope="scope">
+                            <span>{{ scope.row.updateTime }}</span>
+
+                    </template>
+                </el-table-column>
+
+                <el-table-column
+                        label="直播间ID"
+                        width="180">
+                    <template slot-scope="scope">
+                        <span style="margin-left: 10px">{{ scope.row.liveId }}</span>
+
+                    </template>
+                </el-table-column>
+
+                <el-table-column
+                        label=""
+                        width="180">
+                    <template slot-scope="scope">
+
+                    </template>
+                </el-table-column>
+                <el-table-column label="">
+                    <template slot-scope="scope">
+
+                    </template>
+                </el-table-column>
+            </el-table>
+
+        </el-col>
+    </el-row>
+
+    <el-dialog title="橱窗修改" :visible.sync="outerVisible">
+        <el-dialog
+                width="30%"
+                title="确认"
+                :visible.sync="innerVisible"
+                append-to-body>
+            <el-button class="grid-content" type="primary" v-on:click="startUpdate">确认</el-button>
+        </el-dialog>
+
+        <p>修改的橱窗号是：<span  class="lialog-ccbh">{{updateid}}</span></p>
+        <el-input v-model="liveId" placeholder="请输入要推荐的直播ID"></el-input>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="outerVisible = false">取 消</el-button>
+            <el-button type="primary" @click="innerVisible = true">确认</el-button>
+        </div>
+    </el-dialog>
+
+</div>
+</body>
+<!-- import Vue before Element -->
+<script src="elementUI/vue.js"></script>
+<!-- import JavaScript -->
+<script src="elementUI/index.js"></script>
+<script>
+    var vue = new Vue({
+        el: '#app',
+        mounted: function () {
+            this.showTable()
+        },
+        data:  {
+            tableData: [],
+            input: "",
+            outerVisible: false,
+            innerVisible: false,
+            liveId: "",   //直播ID
+            updateid: ""  //橱窗ID
+
+        },
+        methods: {
+            geindex: function () {
+                window.open("https://www.baidu.com/");
+
+            },
+            showTable: function () {
+                console.log("获取数据");
+
+                $.ajax({
+                    type : "GET",
+                    url : "/nav11",
+                    success : function(data) {
+                        vue.tableData=data;
+//                        console.log(JSON.parse(message));
+                    },
+                    error : function(){
+                        alert("错误");
+                    }
+
+                });
+
+
+            },
+            getCloumn: function (row,column,cell,event) {
+                console.log(row.id);
+                this.updateid = row.id;
+                this.outerVisible = true;
+
+            },
+            startUpdate: function () {
+                $.post("/updateshowcase",
+                    {
+                        id:vue.updateid,
+                        liveId:vue.liveId
+
+                    },function(result){
+                    $("span").html(result);
+                });
+                location.reload();
+            }
+
+        }
+
+    });
+</script>
+<script type="text/javascript">
+</script>
+</html>
